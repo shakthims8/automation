@@ -2,3 +2,5 @@ Flask
 SQLAlchemy
 Flask-SQLAlchemy
 pytest
+app
+redis

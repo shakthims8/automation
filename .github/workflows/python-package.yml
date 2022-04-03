@@ -1,0 +1,40 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Python package
+
+on:
+  push:
+    branches: [ master ]
+
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        platform: [ubuntu -latest]
+        python-version: [3.7]
+    runs-on: ${{ matrix.platform }}    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r req.txt  
+    - name: Test with pytest
+      run: |
+        pytest test.py
+        
+    - name: check docker installed or not
+      run: docker run hello-world
+    - name: Push to docker Hub
+      uses: docker/build-push-action@V1
+      with:
+        username: ${{ secrets.DOCKER-USER }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        repository: shakthivel/first_doc
+        tag_with_ref: true
